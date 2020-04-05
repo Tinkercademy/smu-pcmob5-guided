@@ -11,19 +11,51 @@ import { navigate } from "../navigationRef";
 import axios from "axios";
 
 const getBlogPosts = async (posts, setPosts) => {
-  // code getblogposts here
+  try {
+    const response = await axios.get(
+      "https://pcmob4-blog-api.herokuapp.com/posts",
+      posts,
+      setPosts
+    );
+    setPosts(response.data);
+    console.log("Posts:\n----");
+    console.log(posts);
+  } catch (err) {
+    console.log("geterror");
+  }
 };
 
 const addBlogPost = async post => {
-  // code addblogpost here
+  console.log("addBlogPost start");
+  try {
+    const response = await axios.post(
+      "https://pcmob4-blog-api.herokuapp.com/create",
+      post
+    );
+  } catch (err) {
+    console.log(`Error on addBlogPost: ${JSON.stringify(err.response.data)}`);
+  }
 };
 
 const deleteBlogPost = async (postID, posts, setPosts) => {
-  // code deleteblogpost here
+  try {
+    const response = await axios.delete(
+      "https://pcmob4-blog-api.herokuapp.com/post/<int:id>",
+      { title, content }
+    );
+    posts = posts.filter(item => item.id !== postID);
+  } catch (err) {}
 };
 
 const editBlogPost = async (posts, editPosts) => {
-  // code editblogpost here
+  try {
+    await axios.put("https://pcmob4-blog-api.herokuapp.com/post/<int:id>", {
+      title,
+      content
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const IndexScreen = ({ navigation }) => {
