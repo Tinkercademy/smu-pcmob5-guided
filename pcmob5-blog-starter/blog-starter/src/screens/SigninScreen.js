@@ -9,18 +9,25 @@ import { navigate } from "../navigationRef";
 export default class SigninScreen extends React.Component {
   state = {
     username: "",
-    password: ""
+    password: "",
   };
 
   _signin = async () => {
-    // code signin stuff here
+    try {
+      const userToken = await AsyncStorage.getItem("token");
+      const ok = await Signin(this.state.username, this.state.password);
+      this.props.navigation.navigate("Index");
+      console.log("success");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  handleUsernameUpdate = username => {
+  handleUsernameUpdate = (username) => {
     this.setState({ username });
   };
 
-  handlePasswordUpdate = password => {
+  handlePasswordUpdate = (password) => {
     this.setState({ password });
   };
 
@@ -62,14 +69,13 @@ export default class SigninScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    flex: 1
-    // margin: 10
+    flex: 1,
   },
   text: {
-    textAlign: "center"
+    textAlign: "center",
   },
   error: {
     textAlign: "center",
-    color: "red"
-  }
+    color: "red",
+  },
 });
