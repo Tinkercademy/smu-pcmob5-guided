@@ -1,32 +1,33 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  AsyncStorage
-} from "react-native";
+import { View, StyleSheet, TextInput, AsyncStorage } from "react-native";
 import { Text, Button, Input } from "react-native-elements";
-import { Signin, Signup } from "../api/api";
+import { Signin } from "../api/api";
 import NavLink from "../components/NavLink";
 import Spacer from "../components/Spacer";
 import { navigate } from "../navigationRef";
 
-export default class SignupScreen extends React.Component {
+export default class SigninScreen extends React.Component {
   state = {
     username: "",
-    password: ""
+    password: "",
   };
 
-  _signup = async () => {
-    // code signup stuff here
+  _signin = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("token");
+      const ok = await Signin(this.state.username, this.state.password);
+      this.props.navigation.navigate("Index");
+      console.log("success");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  handleUsernameUpdate = username => {
+  handleUsernameUpdate = (username) => {
     this.setState({ username });
   };
 
-  handlePasswordUpdate = password => {
+  handlePasswordUpdate = (password) => {
     this.setState({ password });
   };
 
@@ -35,7 +36,7 @@ export default class SignupScreen extends React.Component {
       <View style={styles.container}>
         <Text>{this.state.err}</Text>
         <Spacer>
-          <Text h3>Sign Up</Text>
+          <Text h3>Sign In</Text>
         </Spacer>
         <Input
           label="Username"
@@ -54,10 +55,10 @@ export default class SignupScreen extends React.Component {
           autoCorrect={false}
         />
         <Spacer>
-          <Button title="Sign up" onPress={this._signup} />
+          <Button title="Sign in" onPress={this._signin} />
           <NavLink
-            routeName="Signin"
-            text="Already have an account? Sign in instead"
+            routeName="Signup"
+            text="Don't have an account? Sign up instead"
           />
         </Spacer>
       </View>
@@ -68,17 +69,13 @@ export default class SignupScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    flex: 1
-    // margin: 10
+    flex: 1,
   },
   text: {
-    textAlign: "center"
+    textAlign: "center",
   },
   error: {
     textAlign: "center",
-    color: "red"
+    color: "red",
   },
-  link: {
-    color: "blue"
-  }
 });
